@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Quiz</title>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+    <h1 class="title"><span>math</span><br><span>quiz</span></h1>
+    <div class="container">
+        <div class="timer-bubble">
+            <span id="timer">00:00</span>
+        </div>
+        <button id="start-btn">Start Quiz</button>
+        
+        <div id="quiz-container" class="hidden">
+            <div class="question-box">
+                <span id="question">Questions here</span>
+                <!-- <span class="search-icon">🔍</span> -->
+            </div>
+            <input type="text" id="answer" placeholder="Answers" onkeypress="checkEnter(event)">
+            <button id="submit-btn">Submit</button>
+        </div>
+
+        <div id="result-container" class="hidden">
+            <p id="final-time"></p>
+            <p id="best-time"></p>
+            <button id="restart-btn">Restart Quiz</button>
+        </div>
+    </div>
+    <script src="../static/script.js"></script>
+</body>
+</html>
