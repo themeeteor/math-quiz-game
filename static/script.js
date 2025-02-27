@@ -43,17 +43,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function startQuiz() {
         startBtn.style.display = "none";
-        resultContainer.classList.add("hidden");
         quizContainer.classList.remove("hidden");
+        resultContainer.classList.add("hidden");
+        questionCount = 0;
         
-        startCountdown(() => {
-            questionCount = 0;
-            startTime = Date.now();
-            updateTimer();
-            interval = setInterval(updateTimer, 100);
-            generateQuestion();
-        });
+        let countdown = 3;
+        timerDisplay.textContent = `Starting in ${countdown}...`;
+    
+        let countdownInterval = setInterval(() => {
+            countdown--;
+            if (countdown > 0) {
+                timerDisplay.textContent = `Starting in ${countdown}...`;
+            } else {
+                clearInterval(countdownInterval);
+                timerDisplay.textContent = "00:00"; // Reset the timer display
+    
+                setTimeout(() => {
+                    startTime = Date.now();
+                    updateTimer();
+                    interval = setInterval(updateTimer, 100);
+                    generateQuestion();
+                    answerInput.focus(); // Ensure focus happens with a slight delay
+                }, 50); // Small delay to allow the DOM to update properly
+            }
+        }, 1000);
     }
+    
+    
 
     function updateTimer() {
         let elapsedTime = ((Date.now() - startTime) / 1000).toFixed(2);
@@ -61,17 +77,22 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function checkAnswer() {
+        const feedbackMessage = document.getElementById("feedback-message"); // Add a feedback element in HTML
+    
         if (answerInput.value.trim() === correctAnswer.toString()) {
+            feedbackMessage.textContent = ""; // Clear feedback when correct
             questionCount++;
             if (questionCount < totalQuestions) {
+                answerInput.value = ""; // Clear the answer box
                 generateQuestion();
-                answerInput.value = "";
             } else {
                 endQuiz();
             }
+        } else {
+            feedbackMessage.textContent = "Wrong answer, try again!"; // Show feedback
         }
     }
-
+    
     function checkEnter(event) {
         if (event.key === "Enter") {
             checkAnswer();
@@ -101,8 +122,20 @@ document.addEventListener("DOMContentLoaded", () => {
     function restartQuiz() {
         quizContainer.classList.remove("hidden");
         resultContainer.classList.add("hidden");
+        
+        // Reset the question text
+        questionDisplay.textContent = "Questions here";
+        
+        // Clear the answer box
+        answerInput.value = "";
+        
+        // Reset the feedback message
+        document.getElementById("feedback-message").textContent = "";
+    
         startQuiz();
     }
+    
+    
 
     startBtn.addEventListener("click", startQuiz);
     submitBtn.addEventListener("click", checkAnswer);
